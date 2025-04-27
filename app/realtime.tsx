@@ -5,10 +5,12 @@ import { weatherRequest } from '../shared/api/api';
 import { WeatherInfo } from '../features/WeatherCard';
 import * as Location from 'expo-location';
 import { CityWeather } from "../etities/CityWeather";
+import { useThemeColors } from '../shared/hooks/useThemeColors';
 
 export default function RealTimePage() {
   const router = useRouter();
   const [weather, setWeather] = useState<CityWeather>();
+  const colors = useThemeColors();
 
   const fetchWeather = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -25,15 +27,15 @@ export default function RealTimePage() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Погода по местоположению</Text>
-      <View style={styles.contentBox}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.header, { color: colors.text }]}>Погода по местоположению</Text>
+      <View style={[styles.contentBox, { backgroundColor: colors.cardBackground }]}>
         <WeatherInfo cityWeather={weather} />
-        <TouchableOpacity style={styles.button} onPress={fetchWeather}>
-          <Text style={styles.buttonText}>Обновить</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.buttonBackground }]} onPress={fetchWeather}>
+          <Text style={[styles.buttonText, { color: colors.buttonText }]}>Обновить</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: '#dc2626' }]} onPress={() => router.push('/') }>
-          <Text style={styles.buttonText}>Назад</Text>
+          <Text style={[styles.buttonText, { color: colors.buttonText }]}>Назад</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -41,9 +43,9 @@ export default function RealTimePage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a1a' },
-  header: { fontSize: 22, fontWeight: 'bold', color: 'white', marginBottom: 20 },
-  contentBox: { width: '90%', padding: 20, backgroundColor: '#2d2d2d', borderRadius: 20 },
-  button: { backgroundColor: '#2563eb', padding: 12, borderRadius: 12, marginTop: 10 },
-  buttonText: { color: 'white', textAlign: 'center' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  header: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
+  contentBox: { width: '90%', padding: 20, borderRadius: 20 },
+  button: { padding: 12, borderRadius: 12, marginTop: 10 },
+  buttonText: { textAlign: 'center' },
 });

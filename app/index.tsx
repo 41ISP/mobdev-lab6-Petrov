@@ -1,16 +1,17 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { weatherRequest } from '../shared/api/api';
 import { WeatherInfo } from '../features/WeatherCard';
 import { SearchBar } from '../features/SearchBar';
 import ThemeToggle from '../features/ThemeProvider';
 import { CityWeather } from '@/etities/CityWeather';
-
+import { useThemeColors } from '../shared/hooks/useThemeColors';
 
 export default function IndexPage() {
   const router = useRouter();
   const [weather, setWeather] = useState<CityWeather>();
+  const colors = useThemeColors();
 
   const handleSearch = async (query: string) => {
     if (!query.trim()) return;
@@ -20,13 +21,13 @@ export default function IndexPage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Погода</Text>
-      <View style={styles.contentBox}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.header, { color: colors.text }]}>Погода</Text>
+      <View style={[styles.contentBox, { backgroundColor: colors.cardBackground }]}>
         <WeatherInfo cityWeather={weather} />
         <SearchBar onSearch={handleSearch} />
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/realtime')}>
-          <Text style={styles.buttonText}>Погода по местоположению</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.buttonBackground }]} onPress={() => router.push('/realtime')}>
+          <Text style={[styles.buttonText, { color: colors.buttonText }]}>Погода по местоположению</Text>
         </TouchableOpacity>
         <ThemeToggle />
       </View>
@@ -35,9 +36,9 @@ export default function IndexPage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a1a' },
-  header: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: 'white' },
-  contentBox: { width: '90%', padding: 20, backgroundColor: '#2d2d2d', borderRadius: 20 },
-  button: { backgroundColor: '#2563eb', padding: 12, borderRadius: 12, marginTop: 10 },
-  buttonText: { color: 'white', textAlign: 'center' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  header: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
+  contentBox: { width: '90%', padding: 20, borderRadius: 20 },
+  button: { padding: 12, borderRadius: 12, marginTop: 10 },
+  buttonText: { textAlign: 'center' },
 });
